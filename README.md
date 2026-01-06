@@ -23,7 +23,6 @@
 - **データベース**: MySQL 8.0
 - **コンテナ**: Docker / Docker Compose
 - **外部API**: Clash Royale API
-- **開発ツール**: Cursor IDE
 
 ## 📋 必要なドキュメント
 
@@ -87,7 +86,7 @@ docker-compose exec app php artisan lang:publish
 3. **DB設計の確認** - [DATABASE_SCHEMA.md](./docs/DATABASE_SCHEMA.md)
 4. **機能実装** - 各ドキュメントを参照しながら実装
 
-## 🎓 学習目標
+## 🎓 目標
 
 このプロジェクトを通じて以下を習得:
 
@@ -96,7 +95,6 @@ docker-compose exec app php artisan lang:publish
 - Docker環境での開発フロー
 - データベース設計とマイグレーション
 - 多言語化(i18n)の実装
-- AIペアプログラミング(Cursor)の活用
 
 ## 📝 ライセンス
 
