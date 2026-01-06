@@ -1,0 +1,305 @@
+# プロジェクト構造
+
+## 📁 ディレクトリ構成
+
+```
+clash-royale-analytics/
+├── .docker/                        # Docker設定ファイル
+│   ├── nginx/
+│   │   └── default.conf           # Nginx設定
+│   ├── php/
+│   │   └── Dockerfile             # PHPコンテナ設定
+│   └── mysql/
+│       └── my.cnf                 # MySQL設定
+│
+├── docs/                          # プロジェクトドキュメント
+│   ├── PROJECT_OVERVIEW.md
+│   ├── PROJECT_STRUCTURE.md
+│   ├── CODING_STANDARDS.md
+│   ├── API_DESIGN.md
+│   ├── DATABASE_SCHEMA.md
+│   ├── SETUP_GUIDE.md
+│   ├── DEPLOYMENT_GUIDE.md
+│   └── LOCALIZATION_GUIDE.md
+│
+├── app/                           # Laravelアプリケーションコア
+│   ├── Console/
+│   │   ├── Commands/              # Artisanコマンド
+│   │   │   ├── FetchBattleLog.php        # バトルログ取得コマンド
+│   │   │   ├── GenerateDailyReport.php   # 日次レポート生成
+│   │   │   └── UpdatePlayerStats.php     # プレイヤー統計更新
+│   │   └── Kernel.php
+│   │
+│   ├── Exceptions/
+│   │   ├── ClashRoyaleApiException.php   # API例外
+│   │   └── Handler.php
+│   │
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Api/                      # APIコントローラー
+│   │   │   │   ├── PlayerController.php
+│   │   │   │   ├── BattleController.php
+│   │   │   │   └── ReportController.php
+│   │   │   ├── Web/                      # Webコントローラー
+│   │   │   │   ├── DashboardController.php
+│   │   │   │   ├── PlayerController.php
+│   │   │   │   ├── ReportController.php
+│   │   │   │   └── LanguageController.php
+│   │   │   └── Controller.php
+│   │   │
+│   │   ├── Middleware/
+│   │   │   ├── SetLocale.php            # 言語設定ミドルウェア
+│   │   │   └── ValidateClashRoyaleTag.php
+│   │   │
+│   │   ├── Requests/                    # フォームリクエスト
+│   │   │   ├── StorePlayerRequest.php
+│   │   │   └── GenerateReportRequest.php
+│   │   │
+│   │   └── Resources/                   # APIリソース
+│   │       ├── PlayerResource.php
+│   │       ├── BattleResource.php
+│   │       └── ReportResource.php
+│   │
+│   ├── Models/                          # Eloquentモデル
+│   │   ├── Player.php                   # プレイヤー
+│   │   ├── Battle.php                   # バトル記録
+│   │   ├── Deck.php                     # デッキ
+│   │   ├── Card.php                     # カード
+│   │   ├── Report.php                   # レポート
+│   │   └── PlayerStatistics.php         # プレイヤー統計
+│   │
+│   ├── Repositories/                    # リポジトリパターン
+│   │   ├── PlayerRepository.php
+│   │   ├── BattleRepository.php
+│   │   └── ReportRepository.php
+│   │
+│   ├── Services/                        # ビジネスロジック
+│   │   ├── ClashRoyaleApiService.php    # API通信サービス
+│   │   ├── BattleAnalysisService.php    # バトル解析サービス
+│   │   ├── ReportGenerationService.php  # レポート生成サービス
+│   │   ├── StatisticsService.php        # 統計計算サービス
+│   │   └── CacheService.php             # キャッシュサービス
+│   │
+│   ├── Providers/
+│   │   ├── AppServiceProvider.php
+│   │   └── ClashRoyaleServiceProvider.php
+│   │
+│   └── View/
+│       └── Components/                  # Bladeコンポーネント
+│           ├── StatCard.php
+│           ├── WinRateChart.php
+│           └── DeckCard.php
+│
+├── bootstrap/
+│   ├── app.php
+│   └── cache/
+│
+├── config/                              # 設定ファイル
+│   ├── app.php
+│   ├── database.php
+│   ├── cache.php
+│   ├── queue.php
+│   └── clashroyale.php                  # Clash Royale API設定
+│
+├── database/
+│   ├── factories/                       # モデルファクトリー
+│   │   ├── PlayerFactory.php
+│   │   └── BattleFactory.php
+│   │
+│   ├── migrations/                      # マイグレーション
+│   │   ├── 2024_01_01_000001_create_players_table.php
+│   │   ├── 2024_01_01_000002_create_battles_table.php
+│   │   ├── 2024_01_01_000003_create_decks_table.php
+│   │   ├── 2024_01_01_000004_create_cards_table.php
+│   │   ├── 2024_01_01_000005_create_reports_table.php
+│   │   └── 2024_01_01_000006_create_player_statistics_table.php
+│   │
+│   └── seeders/                         # シーダー
+│       ├── DatabaseSeeder.php
+│       └── CardSeeder.php               # カード情報の初期データ
+│
+├── public/                              # 公開ディレクトリ
+│   ├── index.php
+│   ├── css/
+│   ├── js/
+│   └── images/
+│
+├── resources/
+│   ├── css/
+│   │   └── app.css
+│   │
+│   ├── js/
+│   │   ├── app.js
+│   │   └── components/
+│   │       ├── ChartComponent.js
+│   │       └── PlayerSearch.js
+│   │
+│   ├── lang/                            # 多言語ファイル
+│   │   ├── ja/
+│   │   │   ├── messages.php
+│   │   │   ├── validation.php
+│   │   │   └── reports.php
+│   │   ├── en/
+│   │   │   ├── messages.php
+│   │   │   ├── validation.php
+│   │   │   └── reports.php
+│   │   └── es/
+│   │       └── (同様の構成)
+│   │
+│   └── views/                           # Bladeテンプレート
+│       ├── layouts/
+│       │   ├── app.blade.php            # メインレイアウト
+│       │   └── guest.blade.php          # ゲストレイアウト
+│       │
+│       ├── components/                  # Bladeコンポーネント
+│       │   ├── stat-card.blade.php
+│       │   ├── win-rate-chart.blade.php
+│       │   └── deck-card.blade.php
+│       │
+│       ├── dashboard/
+│       │   └── index.blade.php          # ダッシュボード
+│       │
+│       ├── players/
+│       │   ├── index.blade.php          # プレイヤー一覧
+│       │   ├── show.blade.php           # プレイヤー詳細
+│       │   └── search.blade.php         # プレイヤー検索
+│       │
+│       ├── reports/
+│       │   ├── index.blade.php          # レポート一覧
+│       │   ├── show.blade.php           # レポート詳細
+│       │   └── partials/
+│       │       ├── statistics.blade.php
+│       │       ├── deck-analysis.blade.php
+│       │       └── trend-charts.blade.php
+│       │
+│       └── errors/
+│           ├── 404.blade.php
+│           └── 500.blade.php
+│
+├── routes/
+│   ├── web.php                          # Webルート
+│   ├── api.php                          # APIルート
+│   └── console.php                      # Consoleルート
+│
+├── storage/
+│   ├── app/
+│   │   ├── public/
+│   │   └── reports/                     # 生成されたレポート
+│   ├── framework/
+│   ├── logs/
+│   └── cache/
+│
+├── tests/
+│   ├── Feature/                         # 機能テスト
+│   │   ├── Api/
+│   │   │   ├── PlayerApiTest.php
+│   │   │   └── BattleApiTest.php
+│   │   └── Web/
+│   │       ├── DashboardTest.php
+│   │       └── PlayerTest.php
+│   │
+│   ├── Unit/                            # 単体テスト
+│   │   ├── Services/
+│   │   │   ├── BattleAnalysisServiceTest.php
+│   │   │   └── StatisticsServiceTest.php
+│   │   └── Models/
+│   │       ├── PlayerTest.php
+│   │       └── BattleTest.php
+│   │
+│   └── TestCase.php
+│
+├── .env                                 # 環境変数(gitignore)
+├── .env.example                         # 環境変数テンプレート
+├── .gitignore
+├── composer.json                        # PHP依存関係
+├── composer.lock
+├── package.json                         # JS依存関係
+├── package-lock.json
+├── docker-compose.yml                   # Docker Compose設定
+├── Dockerfile                           # メインDockerfile
+├── artisan                              # Artisan CLI
+├── phpunit.xml                          # PHPUnit設定
+└── README.md
+```
+
+## 🎯 主要ディレクトリの役割
+
+### `/app`
+アプリケーションのコアロジックを格納。MVCパターンの中心。
+
+### `/app/Services`
+ビジネスロジックを分離して配置。Controller から呼び出される。
+- 外部API通信
+- データ解析処理
+- レポート生成
+- 統計計算
+
+### `/app/Repositories`
+データアクセスロジックを抽象化。テスト可能性を向上。
+
+### `/database/migrations`
+データベーススキーマのバージョン管理。
+
+### `/resources/lang`
+多言語対応ファイル。言語ごとにサブディレクトリを作成。
+
+### `/resources/views`
+Bladeテンプレート。UI表示を担当。
+
+### `/tests`
+テストコード。Feature(機能テスト)とUnit(単体テスト)に分類。
+
+## 📝 ファイル命名規則
+
+### コントローラー
+- 単数形 + Controller: `PlayerController.php`
+- RESTful: `index`, `show`, `store`, `update`, `destroy`
+
+### モデル
+- 単数形、パスカルケース: `Player.php`, `Battle.php`
+
+### マイグレーション
+- スネークケース: `create_players_table.php`
+- 日付プレフィックス: `2024_01_01_000001_`
+
+### サービス
+- 役割 + Service: `BattleAnalysisService.php`
+
+### ビュー
+- ケバブケース: `player-detail.blade.php`
+
+## 🔄 データフロー
+
+```
+User Request
+    ↓
+Routes (web.php / api.php)
+    ↓
+Controller
+    ↓
+Service Layer ←→ External API (Clash Royale)
+    ↓
+Repository
+    ↓
+Model (Eloquent)
+    ↓
+Database
+    ↓
+Response → View (Blade) / JSON (API)
+```
+
+## 🚀 開発時のディレクトリ作成順序
+
+1. `docs/` - ドキュメント作成
+2. `.docker/` - Docker環境構築
+3. `database/migrations/` - DB設計
+4. `app/Models/` - モデル作成
+5. `app/Services/` - サービス層実装
+6. `app/Http/Controllers/` - コントローラー実装
+7. `resources/views/` - ビュー作成
+8. `resources/lang/` - 多言語ファイル作成
+9. `tests/` - テスト作成
+
+---
+
+**最終更新**: 2026-01-06
