@@ -23,7 +23,6 @@
 - **データベース**: MySQL 8.0
 - **コンテナ**: Docker / Docker Compose
 - **外部API**: Clash Royale API
-- **開発ツール**: Cursor IDE
 
 ## 📋 必要なドキュメント
 
