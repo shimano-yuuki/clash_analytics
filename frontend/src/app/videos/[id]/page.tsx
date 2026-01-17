@@ -73,10 +73,10 @@ export default function VideoDetailPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
         <button
-          onClick={() => router.back()}
+          onClick={() => router.push('/')}
           className="text-blue-600 hover:underline mb-4"
         >
-          ← 戻る
+          ← ホームに戻る
         </button>
         <h1 className="text-3xl font-bold">{video.title || video.filename}</h1>
       </div>
