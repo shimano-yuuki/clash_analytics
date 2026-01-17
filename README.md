@@ -29,15 +29,15 @@
 
 プロジェクトを進める前に、以下のドキュメントを確認してください:
 
-1. [PROJECT_OVERVIEW.md](./PROJECT_OVERVIEW.md) - 詳細な機能要件
-2. [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) - ディレクトリ構成
-3. [CODING_STANDARDS.md](./CODING_STANDARDS.md) - コーディング規約
-4. [API_DESIGN.md](./API_DESIGN.md) - API設計
-5. [DATABASE_SCHEMA.md](./DATABASE_SCHEMA.md) - データベース設計
-6. [DIAGRAMS.md](./DIAGRAMS.md) - システム図・フロー図（シーケンス図、マーメイド図）
-7. [SETUP_GUIDE.md](./SETUP_GUIDE.md) - 環境構築手順
-8. [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) - デプロイ手順
-9. [LOCALIZATION_GUIDE.md](./LOCALIZATION_GUIDE.md) - 多言語化ガイド
+1. [PROJECT_OVERVIEW.md](./docs/PROJECT_OVERVIEW.md) - 詳細な機能要件
+2. [PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md) - ディレクトリ構成
+3. [CODING_STANDARDS.md](./docs/CODING_STANDARDS.md) - コーディング規約
+4. [API_DESIGN.md](./docs/API_DESIGN.md) - API設計
+5. [DATABASE_SCHEMA.md](./docs/DATABASE_SCHEMA.md) - データベース設計
+6. [DIAGRAMS.md](./docs/DIAGRAMS.md) - システム図・フロー図（シーケンス図、マーメイド図）
+7. [SETUP_GUIDE.md](./docs/SETUP_GUIDE.md) - 環境構築手順
+8. [DEPLOYMENT_GUIDE.md](./docs/DEPLOYMENT_GUIDE.md) - デプロイ手順
+9. [LOCALIZATION_GUIDE.md](./docs/LOCALIZATION_GUIDE.md) - 多言語化ガイド
 
 ## 🚀 クイックスタート
 
@@ -49,6 +49,8 @@
 - Git がインストール済み
 
 ### 初回セットアップ
+
+詳細な手順は [SETUP_INSTRUCTIONS.md](./SETUP_INSTRUCTIONS.md) を参照してください。
 
 ```bash
 # リポジトリのクローン
@@ -63,7 +65,7 @@ cp .env.example .env
 # GOOGLE_AI_API_KEY=your_api_key_here
 
 # Dockerコンテナの起動
-docker-compose up -d
+docker-compose up -d --build
 
 # Laravelの依存パッケージインストール
 docker-compose exec app composer install
@@ -71,11 +73,11 @@ docker-compose exec app composer install
 # アプリケーションキーの生成
 docker-compose exec app php artisan key:generate
 
+# ストレージへのシンボリックリンク作成
+docker-compose exec app php artisan storage:link
+
 # データベースマイグレーション
 docker-compose exec app php artisan migrate
-
-# 多言語ファイルの準備
-docker-compose exec app php artisan lang:publish
 ```
 
 ### アクセス
@@ -86,8 +88,8 @@ docker-compose exec app php artisan lang:publish
 ## 📚 開発の進め方
 
 1. **環境構築** - [SETUP_GUIDE.md](./docs/SETUP_GUIDE.md)を参照
-2. **コーディング規約の確認** - [CODING_STANDARDS.md](./docs/CODING_STANDARDS.md)
-3. **DB設計の確認** - [DATABASE_SCHEMA.md](./docs/DATABASE_SCHEMA.md)
+2. **コーディング規約の確認** - [CODING_STANDARDS.md](./docs/CODING_STANDARDS.md)を参照
+3. **DB設計の確認** - [DATABASE_SCHEMA.md](./docs/DATABASE_SCHEMA.md)を参照
 4. **機能実装** - 各ドキュメントを参照しながら実装
 
 ## 🎓 目標
