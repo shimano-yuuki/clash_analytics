@@ -38,12 +38,6 @@ export default function RootLayout({
                   動画一覧
                 </Link>
                 <Link
-                  href="/players"
-                  className="text-gray-700 hover:text-purple-600 transition"
-                >
-                  プレイヤー検索
-                </Link>
-                <Link
                   href="/videos/upload"
                   className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition"
                 >

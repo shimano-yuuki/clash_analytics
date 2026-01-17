@@ -57,10 +57,3 @@ export const reportApi = {
 export const dashboardApi = {
     getStats: () => apiClient.get('/dashboard/stats'),
 };
-
-export const playerApi = {
-    getPlayer: (tag: string) => apiClient.get('/players', { params: { tag } }),
-    getBattles: (tag: string) => apiClient.get('/players/battles', { params: { tag } }),
-    getBattleForAnalysis: (tag: string, battleIndex: number = 0) =>
-        apiClient.get('/players/battle/analysis', { params: { tag, battle_index: battleIndex } }),
-};

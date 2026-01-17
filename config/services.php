@@ -35,8 +35,4 @@ return [
         ],
     ],
 
-    'clashroyale' => [
-        'api_key' => env('CLASH_ROYALE_API_KEY'),
-    ],
-
 ];

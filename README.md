@@ -48,7 +48,6 @@
 - **動画解析**: Google Video Intelligence API
 - **AI解析**: Google Gemini API
 - **認証**: Google Cloud Platform (Service Account)
-- **バトルデータ**: Clash Royale Official API
 
 ### 開発ツール
 - **Node.js**: 18.20.8 (Docker内)
@@ -81,7 +80,6 @@
 - Docker Desktop がインストール済み
 - Google Cloud Platform アカウントとAPIキーを取得済み
 - Google Video Intelligence API / Gemini API が有効化済み
-- Clash Royale API キーを取得済み（https://developer.clashroyale.com/）
 - Git がインストール済み
 
 ### 初回セットアップ
@@ -96,10 +94,9 @@ cd clash-royale-analytics
 # 環境変数ファイルのコピー
 cp .env.example .env
 
-# .envファイルを編集してAPIキーを設定
+# .envファイルを編集してGoogle AI APIキーを設定
 # GOOGLE_CLOUD_PROJECT_ID=your_project_id
 # GOOGLE_AI_API_KEY=your_api_key_here
-# CLASH_ROYALE_API_KEY=your_clash_royale_api_key_here
 
 # Dockerコンテナの起動
 docker-compose up -d --build
@@ -131,16 +128,6 @@ docker-compose exec app php artisan migrate
 4. **機能実装** - 各ドキュメントを参照しながら実装
 
 ## 🔑 APIキーの取得方法
-
-### Clash Royale API キー
-
-1. https://developer.clashroyale.com/ にアクセス
-2. Supercellアカウントでログイン
-3. 「New Key」をクリックしてAPIキーを作成
-4. キーをコピーして`.env`に設定:
-   ```
-   CLASH_ROYALE_API_KEY=your_api_key_here
-   ```
 
 ### Google AI API キー
 
