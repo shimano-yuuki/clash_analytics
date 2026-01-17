@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  # Nginx Webサーバー
+  # Nginx Webサーバー (Laravel API用)
   nginx:
     image: nginx:alpine
     container_name: cr_nginx
@@ -10,6 +10,26 @@ services:
     volumes:
       - ./:/var/www/html
       - ./.docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - cr_network
+
+  # Next.js フロントエンド
+  nextjs:
+    build:
+      context: ./frontend
+      dockerfile: ../.docker/nextjs/Dockerfile
+    container_name: cr_nextjs
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NODE_ENV=development
     depends_on:
       - app
     networks:

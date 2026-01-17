@@ -117,10 +117,13 @@ Clash Royaleのプレイ動画をアップロードし、GoogleのAI技術で動
 - 「〇分でこういうプレイをした場合のリスク」一覧
 
 **表示技術**:
-- HTML5 Video (動画プレーヤー)
-- Chart.js 4.4.0 (グラフ・チャート) - CDN経由
-- Tailwind CSS 4.0.0 (UIフレームワーク)
-- Blade Templates (サーバーサイドレンダリング)
+- **フロントエンドフレームワーク**: React 18.3.1 + Next.js 14.2.0
+- **言語**: TypeScript
+- **UIフレームワーク**: Tailwind CSS 3.4.6
+- **チャートライブラリ**: Recharts 2.12.7
+- **HTTPクライアント**: Axios 1.7.7
+- **動画プレーヤー**: HTML5 Video
+- **レンダリング**: Server-Side Rendering (SSR) / Static Site Generation (SSG)
 
 ## 🌐 多言語化要件
 

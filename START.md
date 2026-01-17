@@ -22,11 +22,14 @@ docker-compose ps
 docker-compose logs app
 ```
 
-### 3. Vite開発サーバーの起動（Hot Reload有効）
+### 3. Next.js開発サーバーの起動（Hot Reload有効）
 
 ```bash
-# Dockerコンテナ内でVite開発サーバーを起動
-docker-compose exec -d app npm run dev
+# Dockerコンテナ内でNext.js開発サーバーを起動（自動起動している場合）
+docker-compose up -d nextjs
+
+# または、既に起動しているコンテナ内で実行
+docker-compose exec nextjs npm run dev
 
 # または、フォアグラウンドで起動（ログを確認したい場合）
 docker-compose exec app npm run dev
@@ -34,7 +37,8 @@ docker-compose exec app npm run dev
 
 ### 4. アプリケーションアクセス
 
-- **アプリケーション**: http://localhost:8000
+- **フロントエンド（Next.js）**: http://localhost:3000
+- **API（Laravel）**: http://localhost:8000
 - **phpMyAdmin**: http://localhost:8080
 - **Vite HMR**: http://localhost:5173
 
@@ -104,9 +108,9 @@ docker-compose exec app php artisan cache:clear
    docker-compose exec -d app npm run dev
    ```
 
-3. ブラウザで http://localhost:8000 を開く
+3. ブラウザで http://localhost:3000 を開く（Next.jsフロントエンド）
 
-4. CSS/JSファイルを編集すると自動的に反映されます
+4. React/TypeScriptファイルを編集すると自動的に反映されます（Hot Reload）
 
 ### 本番ビルド
 
@@ -119,17 +123,23 @@ docker-compose exec app php artisan cache:clear
 
 ## ⚠️ トラブルシューティング
 
-### Vite開発サーバーが起動しない場合
+### Next.js開発サーバーが起動しない場合
 
 ```bash
-# コンテナ内のNode.jsバージョンを確認
-docker-compose exec app node --version
+# Next.jsコンテナの状態を確認
+docker-compose ps nextjs
+
+# Next.jsコンテナ内のNode.jsバージョンを確認
+docker-compose exec nextjs node --version
 
 # 依存関係を再インストール
-docker-compose exec app npm install
+docker-compose exec nextjs npm install
 
 # 開発サーバーを起動
-docker-compose exec app npm run dev
+docker-compose exec nextjs npm run dev
+
+# ログを確認
+docker-compose logs -f nextjs
 ```
 
 ### コンテナが起動しない場合

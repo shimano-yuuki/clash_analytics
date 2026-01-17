@@ -26,12 +26,12 @@
 - **Composer**: PHP依存関係管理
 
 ### フロントエンド
-- **テンプレートエンジン**: Blade Templates
-- **CSSフレームワーク**: Tailwind CSS 4.0.0
-- **ビルドツール**: Vite 7.0.7
-- **チャートライブラリ**: Chart.js 4.4.0 (CDN)
-- **JavaScript**: ES6+ (Vanilla JS)
-- **開発環境**: Laravel Vite Plugin 2.0.0
+- **フレームワーク**: React 18.3.1 + Next.js 14.2.0
+- **言語**: TypeScript
+- **CSSフレームワーク**: Tailwind CSS 3.4.6
+- **HTTPクライアント**: Axios 1.7.7
+- **チャートライブラリ**: Recharts 2.12.7
+- **開発環境**: Next.js Dev Server (Hot Reload対応)
 
 ### データベース・キャッシュ
 - **データベース**: MySQL 8.0
@@ -115,8 +115,9 @@ docker-compose exec app php artisan migrate
 
 ### アクセス
 
-- アプリケーション: http://localhost:8000
-- phpMyAdmin: http://localhost:8080
+- **フロントエンド (Next.js)**: http://localhost:3000
+- **API (Laravel)**: http://localhost:8000
+- **phpMyAdmin**: http://localhost:8080
 
 ## 📚 開発の進め方
 
