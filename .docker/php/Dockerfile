@@ -13,10 +13,19 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     libzip-dev \
+    redis-tools \
     && rm -rf /var/lib/apt/lists/*
 
 # PHP拡張のインストール
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+
+# Redis PHP拡張のインストール（必要なビルドツールをインストール）
+RUN apt-get update && apt-get install -y \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/* \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && apt-get purge -y pkg-config || true
 
 # Composerのインストール
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

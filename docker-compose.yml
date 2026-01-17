@@ -23,6 +23,8 @@ services:
     container_name: cr_app
     volumes:
       - ./:/var/www/html
+    ports:
+      - "5173:5173" # Vite HMR用ポート
     environment:
       - DB_HOST=mysql
       - DB_PORT=3306
