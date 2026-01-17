@@ -120,10 +120,35 @@ class PlayerController extends Controller
                 'message' => 'Battle log retrieved successfully.',
             ]);
         } catch (Exception $e) {
+            $statusCode = 500;
+            $errorMessage = $e->getMessage();
+            
+            // APIキー未設定エラーの場合
+            if (str_contains($errorMessage, 'API key is not configured')) {
+                $statusCode = 503;
+                $errorMessage = 'Clash Royale APIキーが設定されていません。管理者に連絡してください。';
+            }
+            // 404エラー（プレイヤーが見つからない）
+            elseif (str_contains($errorMessage, '404') || str_contains($errorMessage, 'not found')) {
+                $statusCode = 404;
+                $errorMessage = 'プレイヤーが見つかりませんでした。プレイヤータグを確認してください。';
+            }
+            // 401エラー（認証エラー）
+            elseif (str_contains($errorMessage, '401') || str_contains($errorMessage, 'Unauthorized')) {
+                $statusCode = 401;
+                $errorMessage = 'Clash Royale APIキーが無効です。';
+            }
+            // 403エラー（アクセス拒否）
+            elseif (str_contains($errorMessage, '403') || str_contains($errorMessage, 'Forbidden')) {
+                $statusCode = 403;
+                $errorMessage = 'Clash Royale APIへのアクセスが拒否されました。';
+            }
+
             return response()->json([
                 'message' => 'Failed to fetch battle log',
-                'error' => $e->getMessage(),
-            ], 500);
+                'error' => $errorMessage,
+                'details' => config('app.debug') ? $e->getMessage() : null,
+            ], $statusCode);
         }
     }
 

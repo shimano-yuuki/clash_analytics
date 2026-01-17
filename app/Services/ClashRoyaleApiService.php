@@ -80,7 +80,20 @@ class ClashRoyaleApiService
                 return $response->json();
             }
 
-            throw new Exception('Failed to fetch battle log: ' . $response->body());
+            // 詳細なエラー情報を取得
+            $statusCode = $response->status();
+            $errorBody = $response->body();
+            $errorJson = $response->json();
+            
+            $errorMessage = 'Failed to fetch battle log';
+            if (isset($errorJson['message'])) {
+                $errorMessage = $errorJson['message'];
+            } elseif (!empty($errorBody)) {
+                $errorMessage = $errorBody;
+            }
+
+            Log::error("Clash Royale API Error (getPlayerBattles): Status {$statusCode} - {$errorMessage}");
+            throw new Exception("Clash Royale API Error [{$statusCode}]: {$errorMessage}");
         } catch (Exception $e) {
             Log::error('Clash Royale API Error (getPlayerBattles): ' . $e->getMessage());
             throw $e;
