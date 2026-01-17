@@ -1,0 +1,86 @@
+version: "3.8"
+
+services:
+  # Nginx Webサーバー
+  nginx:
+    image: nginx:alpine
+    container_name: cr_nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www/html
+      - ./.docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - cr_network
+
+  # PHP-FPM アプリケーション
+  app:
+    build:
+      context: .
+      dockerfile: .docker/php/Dockerfile
+    container_name: cr_app
+    volumes:
+      - ./:/var/www/html
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=clash_royale_analytics
+      - DB_USERNAME=cr_user
+      - DB_PASSWORD=cr_password
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - cr_network
+
+  # MySQL データベース
+  mysql:
+    image: mysql:8.0
+    container_name: cr_mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: clash_royale_analytics
+      MYSQL_USER: cr_user
+      MYSQL_PASSWORD: cr_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./.docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    networks:
+      - cr_network
+
+  # phpMyAdmin (オプション)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: cr_phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: cr_user
+      PMA_PASSWORD: cr_password
+    depends_on:
+      - mysql
+    networks:
+      - cr_network
+
+  # Redis (キャッシュ・セッション用、オプション)
+  redis:
+    image: redis:alpine
+    container_name: cr_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - cr_network
+
+networks:
+  cr_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
