@@ -9,75 +9,42 @@
 - **ページネーション**: 大量データは必ずページネーション
 - **レート制限**: API呼び出し頻度制限を実装
 
-## 📡 Clash Royale API 連携
+## 📡 Google AI API 連携
 
-### エンドポイント一覧
+### 使用API
 
-#### プレイヤー情報取得
-```
-GET https://api.clashroyale.com/v1/players/{playerTag}
-```
+#### Video Intelligence API
+動画の内容認識、オブジェクト検出、テキスト検出を行う
 
-**リクエストヘッダー**:
+**ベースURL**:
 ```
-Authorization: Bearer {API_TOKEN}
+https://videointelligence.googleapis.com/v1/videos:annotate
 ```
 
-**レスポンス例**:
-```json
-{
-  "tag": "#2PP",
-  "name": "PlayerName",
-  "expLevel": 14,
-  "trophies": 5000,
-  "bestTrophies": 5200,
-  "wins": 1000,
-  "losses": 800,
-  "battleCount": 2000,
-  "threeCrownWins": 300,
-  "cards": [...],
-  "currentDeck": [...]
-}
+**主な機能**:
+- 動画内容認識
+- ラベル検出
+- シーン変更検出
+- テキスト検出(OCR)
+- オブジェクト追跡
+
+#### Gemini API
+動画の詳細分析と自然言語での説明生成を行う
+
+**ベースURL**:
+```
+https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent
 ```
 
-#### バトルログ取得
-```
-GET https://api.clashroyale.com/v1/players/{playerTag}/battlelog
-```
+**主な機能**:
+- 動画フレームの詳細分析
+- ゲーム画面の認識(カード、エリクサー、タイマー等)
+- 自然言語での説明生成
+- リスク分析のテキスト生成
 
-**レスポンス例**:
-```json
-[
-  {
-    "type": "PvP",
-    "battleTime": "20240106T123045.000Z",
-    "isLadderTournament": false,
-    "arena": {
-      "id": 54000015,
-      "name": "Legendary Arena"
-    },
-    "gameMode": {
-      "id": 72000006,
-      "name": "Ladder"
-    },
-    "team": [
-      {
-        "tag": "#2PP",
-        "name": "PlayerName",
-        "startingTrophies": 5000,
-        "trophyChange": 30,
-        "crowns": 3,
-        "cards": [...]
-      }
-    ],
-    "opponent": [...]
-  }
-]
+**認証**:
 ```
-
-#### カード情報取得
-```
-GET https://api.clashroyale.com/v1/cards
+Authorization: Bearer {API_KEY}
 ```
 
 ## 🔌 自アプリケーションAPI
@@ -126,18 +93,19 @@ GET https://api.clashroyale.com/v1/cards
 
 ---
 
-## 👤 Players (プレイヤー)
+## 🎬 Videos (動画)
 
-### 1. プレイヤー一覧取得
+### 1. 動画一覧取得
 ```
-GET /api/v1/players
+GET /api/v1/videos
 ```
 
 **クエリパラメータ**:
 - `page` (integer): ページ番号 (デフォルト: 1)
 - `per_page` (integer): 1ページあたりの件数 (デフォルト: 15, 最大: 100)
-- `sort` (string): ソート項目 (`trophies`, `name`, `created_at`)
+- `sort` (string): ソート項目 (`created_at`, `file_name`, `status`)
 - `order` (string): ソート順 (`asc`, `desc`)
+- `status` (string): フィルタ (`uploaded`, `analyzing`, `completed`, `failed`)
 
 **レスポンス例**:
 ```json
@@ -146,28 +114,30 @@ GET /api/v1/players
   "data": [
     {
       "id": 1,
-      "tag": "#2PP",
-      "name": "PlayerName",
-      "trophies": 5000,
-      "level": 14,
-      "wins": 1000,
-      "losses": 800,
-      "last_fetched_at": "2024-01-06T12:30:45Z",
-      "created_at": "2024-01-01T00:00:00Z"
+      "file_name": "clash_royale_gameplay_001.mp4",
+      "file_size": 52428800,
+      "file_path": "videos/2024/01/clash_royale_gameplay_001.mp4",
+      "status": "completed",
+      "duration_seconds": 180,
+      "created_at": "2024-01-06T12:30:45Z",
+      "analysis": {
+        "status": "completed",
+        "completed_at": "2024-01-06T12:35:20Z"
+      }
     }
   ],
   "meta": {
     "current_page": 1,
     "per_page": 15,
-    "total": 100,
-    "last_page": 7
+    "total": 50,
+    "last_page": 4
   }
 }
 ```
 
-### 2. プレイヤー詳細取得
+### 2. 動画詳細取得
 ```
-GET /api/v1/players/{id}
+GET /api/v1/videos/{id}
 ```
 
 **レスポンス例**:
@@ -176,63 +146,37 @@ GET /api/v1/players/{id}
   "success": true,
   "data": {
     "id": 1,
-    "tag": "#2PP",
-    "name": "PlayerName",
-    "trophies": 5000,
-    "best_trophies": 5200,
-    "level": 14,
-    "wins": 1000,
-    "losses": 800,
-    "three_crown_wins": 300,
-    "battle_count": 2000,
-    "win_rate": 0.556,
-    "current_deck": [...],
-    "statistics": {
-      "recent_win_rate": 0.65,
-      "average_trophy_change": 15,
-      "most_used_cards": [...]
-    },
-    "last_fetched_at": "2024-01-06T12:30:45Z"
+    "file_name": "clash_royale_gameplay_001.mp4",
+    "file_size": 52428800,
+    "file_path": "videos/2024/01/clash_royale_gameplay_001.mp4",
+    "status": "completed",
+    "duration_seconds": 180,
+    "created_at": "2024-01-06T12:30:45Z",
+    "analysis": {
+      "status": "completed",
+      "started_at": "2024-01-06T12:31:00Z",
+      "completed_at": "2024-01-06T12:35:20Z",
+      "report_id": 10
+    }
   }
 }
 ```
 
-### 3. プレイヤー検索
+### 3. 動画アップロード
 ```
-GET /api/v1/players/search
-```
-
-**クエリパラメータ**:
-- `tag` (string, required): プレイヤータグ
-
-**レスポンス例**:
-```json
-{
-  "success": true,
-  "data": {
-    "tag": "#2PP",
-    "name": "PlayerName",
-    "trophies": 5000,
-    "level": 14,
-    "exists_in_db": false
-  }
-}
+POST /api/v1/videos/upload
 ```
 
-### 4. プレイヤー登録
-```
-POST /api/v1/players
-```
+**Content-Type**: `multipart/form-data`
 
 **リクエストボディ**:
-```json
-{
-  "tag": "#2PP"
-}
-```
+- `video` (file, required): 動画ファイル (MP4, MOV, AVI, WebM)
+- `title` (string, optional): 動画のタイトル
 
 **バリデーション**:
-- `tag`: 必須、文字列、正規表現 `/^#[0-9A-Z]+$/`
+- `video`: 必須、ファイル、MIMEタイプ: `video/mp4`, `video/quicktime`, `video/x-msvideo`, `video/webm`
+- `video`: 最大サイズ: 500MB
+- `title`: 文字列、最大255文字
 
 **レスポンス例**:
 ```json
@@ -240,91 +184,33 @@ POST /api/v1/players
   "success": true,
   "data": {
     "id": 1,
-    "tag": "#2PP",
-    "name": "PlayerName",
-    "trophies": 5000,
-    "message": "Player registered successfully"
+    "file_name": "clash_royale_gameplay_001.mp4",
+    "status": "uploaded",
+    "message": "Video uploaded successfully. Analysis will start shortly."
   }
 }
 ```
 
-### 5. プレイヤーデータ更新
+### 4. 動画削除
 ```
-PUT /api/v1/players/{id}/refresh
-```
-
-**レスポンス例**:
-```json
-{
-  "success": true,
-  "data": {
-    "id": 1,
-    "tag": "#2PP",
-    "updated_fields": ["trophies", "wins", "losses"],
-    "last_fetched_at": "2024-01-06T12:30:45Z"
-  },
-  "message": "Player data refreshed successfully"
-}
-```
-
-### 6. プレイヤー削除
-```
-DELETE /api/v1/players/{id}
+DELETE /api/v1/videos/{id}
 ```
 
 **レスポンス例**:
 ```json
 {
   "success": true,
-  "message": "Player deleted successfully"
+  "message": "Video deleted successfully"
 }
 ```
 
 ---
 
-## ⚔️ Battles (バトル)
+## 🔍 Video Analysis (動画解析)
 
-### 1. バトルログ取得
+### 1. 動画解析開始
 ```
-GET /api/v1/players/{playerId}/battles
-```
-
-**クエリパラメータ**:
-- `page` (integer): ページ番号
-- `per_page` (integer): 1ページあたりの件数
-- `from_date` (date): 開始日 (YYYY-MM-DD)
-- `to_date` (date): 終了日 (YYYY-MM-DD)
-- `game_mode` (string): ゲームモード (`Ladder`, `Challenge`, etc.)
-
-**レスポンス例**:
-```json
-{
-  "success": true,
-  "data": [
-    {
-      "id": 1,
-      "battle_time": "2024-01-06T12:30:45Z",
-      "type": "PvP",
-      "game_mode": "Ladder",
-      "is_win": true,
-      "trophy_change": 30,
-      "crowns": 3,
-      "opponent_crowns": 1,
-      "deck": [...],
-      "opponent_deck": [...],
-      "arena_name": "Legendary Arena"
-    }
-  ],
-  "meta": {
-    "current_page": 1,
-    "total": 500
-  }
-}
-```
-
-### 2. バトル詳細取得
-```
-GET /api/v1/battles/{id}
+POST /api/v1/videos/{videoId}/analyze
 ```
 
 **レスポンス例**:
@@ -332,52 +218,103 @@ GET /api/v1/battles/{id}
 {
   "success": true,
   "data": {
-    "id": 1,
-    "player": { ... },
-    "battle_time": "2024-01-06T12:30:45Z",
-    "type": "PvP",
-    "game_mode": "Ladder",
-    "is_win": true,
-    "trophy_change": 30,
-    "crowns": 3,
-    "opponent_crowns": 1,
-    "deck": [
+    "video_id": 1,
+    "analysis_id": 5,
+    "status": "analyzing",
+    "message": "Analysis started. Please check status later."
+  }
+}
+```
+
+### 2. 解析ステータス取得
+```
+GET /api/v1/videos/{videoId}/analysis/status
+```
+
+**レスポンス例**:
+```json
+{
+  "success": true,
+  "data": {
+    "video_id": 1,
+    "analysis_id": 5,
+    "status": "analyzing",
+    "progress": 65,
+    "started_at": "2024-01-06T12:31:00Z",
+    "estimated_completion": "2024-01-06T12:35:00Z"
+  }
+}
+```
+
+### 3. 解析結果取得
+```
+GET /api/v1/videos/{videoId}/analysis
+```
+
+**レスポンス例**:
+```json
+{
+  "success": true,
+  "data": {
+    "video_id": 1,
+    "analysis_id": 5,
+    "status": "completed",
+    "elixir_analysis": {
+      "average_elixir_usage": 7.5,
+      "elixir_waste_count": 3,
+      "elixir_waste_timestamps": ["00:45", "01:23", "02:10"],
+      "overload_count": 5,
+      "overload_timestamps": ["00:12", "00:45", "01:30", "02:05", "02:45"]
+    },
+    "cost_analysis": {
+      "average_deck_cost": 3.8,
+      "high_cost_card_usage": 12,
+      "low_cost_card_usage": 28,
+      "cost_balance_score": 0.75
+    },
+    "timing_analysis": {
+      "attack_timings": [
+        {
+          "timestamp": "00:30",
+          "elixir_status": "full",
+          "outcome": "success",
+          "risk_level": "low"
+        },
+        {
+          "timestamp": "01:45",
+          "elixir_status": "low",
+          "outcome": "failed",
+          "risk_level": "high"
+        }
+      ]
+    },
+    "risk_analysis": {
+      "high_risk_plays": [
+        {
+          "timestamp": "01:45",
+          "play_description": "エリクサー不足状態での攻撃",
+          "risk_level": "high",
+          "risk_description": "エリクサーが2の状態でコスト6のカードを使用したため、防御が手薄になりました"
+        }
+      ],
+      "risk_score": 0.65
+    },
+    "timeline": [
       {
-        "id": 1,
-        "name": "Knight",
-        "level": 14,
-        "max_level": 14
+        "timestamp": "00:00",
+        "description": "ゲーム開始",
+        "elixir": 10,
+        "cards_played": []
+      },
+      {
+        "timestamp": "00:15",
+        "description": "Knightを使用",
+        "elixir": 7,
+        "cards_played": ["Knight"]
       }
     ],
-    "opponent": {
-      "tag": "#ABC",
-      "name": "Opponent",
-      "trophies": 4900,
-      "deck": [...]
-    },
-    "arena": {
-      "id": 54000015,
-      "name": "Legendary Arena"
-    }
+    "created_at": "2024-01-06T12:35:20Z"
   }
-}
-```
-
-### 3. バトルログ手動更新
-```
-POST /api/v1/players/{playerId}/battles/fetch
-```
-
-**レスポンス例**:
-```json
-{
-  "success": true,
-  "data": {
-    "fetched_count": 25,
-    "new_battles": 10,
-    "updated_battles": 0
-  },
-  "message": "Battle log fetched successfully"
 }
 ```
 
@@ -387,12 +324,11 @@ POST /api/v1/players/{playerId}/battles/fetch
 
 ### 1. レポート一覧取得
 ```
-GET /api/v1/players/{playerId}/reports
+GET /api/v1/videos/{videoId}/reports
 ```
 
 **クエリパラメータ**:
 - `page` (integer): ページ番号
-- `type` (string): レポートタイプ (`daily`, `weekly`, `monthly`, `custom`)
 
 **レスポンス例**:
 ```json
@@ -401,20 +337,22 @@ GET /api/v1/players/{playerId}/reports
   "data": [
     {
       "id": 1,
-      "type": "daily",
-      "period_start": "2024-01-06",
-      "period_end": "2024-01-06",
-      "total_battles": 10,
-      "wins": 7,
-      "losses": 3,
-      "win_rate": 0.7,
-      "trophy_change": 150,
-      "created_at": "2024-01-06T23:59:59Z"
+      "video_id": 1,
+      "video": {
+        "id": 1,
+        "file_name": "clash_royale_gameplay_001.mp4"
+      },
+      "analysis_summary": {
+        "elixir_efficiency": 0.75,
+        "cost_balance": 0.80,
+        "risk_score": 0.65
+      },
+      "created_at": "2024-01-06T12:35:20Z"
     }
   ],
   "meta": {
     "current_page": 1,
-    "total": 30
+    "total": 1
   }
 }
 ```
@@ -430,148 +368,106 @@ GET /api/v1/reports/{id}
   "success": true,
   "data": {
     "id": 1,
-    "player": { ... },
-    "type": "daily",
-    "period_start": "2024-01-06",
-    "period_end": "2024-01-06",
-    "statistics": {
-      "total_battles": 10,
-      "wins": 7,
-      "losses": 3,
-      "draws": 0,
-      "win_rate": 0.7,
-      "average_trophy_change": 15,
-      "total_trophy_change": 150,
-      "three_crown_wins": 3,
-      "crowns_earned": 25,
-      "crowns_lost": 12
+    "video_id": 1,
+    "video": {
+      "id": 1,
+      "file_name": "clash_royale_gameplay_001.mp4",
+      "duration_seconds": 180
     },
-    "deck_analysis": {
-      "most_used_deck": [...],
-      "best_performing_deck": [...],
-      "deck_win_rates": [...]
+    "elixir_analysis": {
+      "average_elixir_usage": 7.5,
+      "elixir_waste_count": 3,
+      "elixir_efficiency": 0.75,
+      "overload_count": 5,
+      "waste_timestamps": [
+        {
+          "timestamp": "00:45",
+          "waste_amount": 2,
+          "description": "エリクサーが満タンの状態で攻撃を見送った"
+        }
+      ]
     },
-    "card_analysis": {
-      "most_used_cards": [...],
-      "best_performing_cards": [...]
+    "cost_analysis": {
+      "average_deck_cost": 3.8,
+      "high_cost_card_usage": 12,
+      "low_cost_card_usage": 28,
+      "cost_balance_score": 0.80,
+      "card_usage_distribution": {
+        "1-3": 28,
+        "4-6": 45,
+        "7-10": 12
+      }
     },
-    "opponent_analysis": {
-      "average_opponent_trophies": 5000,
-      "common_opponent_decks": [...]
+    "timing_analysis": {
+      "attack_timings": [
+        {
+          "timestamp": "00:30",
+          "elixir_status": "full",
+          "outcome": "success",
+          "risk_level": "low",
+          "description": "エリクサー満タン状態での攻撃で成功"
+        },
+        {
+          "timestamp": "01:45",
+          "elixir_status": "low",
+          "outcome": "failed",
+          "risk_level": "high",
+          "description": "エリクサー不足状態での攻撃で失敗"
+        }
+      ],
+      "optimal_timing_count": 8,
+      "poor_timing_count": 3
     },
-    "time_analysis": {
-      "hourly_distribution": [...],
-      "best_performance_time": "20:00-22:00"
+    "risk_analysis": {
+      "high_risk_plays": [
+        {
+          "timestamp": "01:45",
+          "play_description": "エリクサー不足状態での攻撃",
+          "risk_level": "high",
+          "risk_description": "エリクサーが2の状態でコスト6のカードを使用したため、防御が手薄になりました",
+          "recommendation": "このタイミングでは防御に専念し、エリクサーが回復してから攻撃することを推奨します"
+        },
+        {
+          "timestamp": "02:30",
+          "play_description": "0分30秒でこういうプレイをした場合のリスク",
+          "risk_level": "medium",
+          "risk_description": "...",
+          "recommendation": "..."
+        }
+      ],
+      "risk_score": 0.65,
+      "risk_summary": "全体として中程度のリスクが見られます。エリクサー管理を改善することで、リスクを低減できます。"
     },
-    "created_at": "2024-01-06T23:59:59Z"
+    "timeline": [
+      {
+        "timestamp": "00:00",
+        "description": "ゲーム開始",
+        "elixir": 10,
+        "cards_played": [],
+        "risk_level": null
+      },
+      {
+        "timestamp": "00:15",
+        "description": "Knightを使用",
+        "elixir": 7,
+        "cards_played": ["Knight"],
+        "risk_level": "low"
+      }
+    ],
+    "recommendations": [
+      {
+        "category": "elixir",
+        "priority": "high",
+        "description": "エリクサーの無駄遣いを減らすことで、より効率的なプレイが可能になります"
+      },
+      {
+        "category": "timing",
+        "priority": "medium",
+        "description": "攻撃タイミングを改善することで、成功率を向上できます"
+      }
+    ],
+    "created_at": "2024-01-06T12:35:20Z"
   }
-}
-```
-
-### 3. レポート生成
-```
-POST /api/v1/players/{playerId}/reports
-```
-
-**リクエストボディ**:
-```json
-{
-  "type": "custom",
-  "period_start": "2024-01-01",
-  "period_end": "2024-01-06"
-}
-```
-
-**バリデーション**:
-- `type`: 必須、in:daily,weekly,monthly,custom
-- `period_start`: type=customの場合必須、date
-- `period_end`: type=customの場合必須、date、period_start以降
-
-**レスポンス例**:
-```json
-{
-  "success": true,
-  "data": {
-    "id": 10,
-    "type": "custom",
-    "period_start": "2024-01-01",
-    "period_end": "2024-01-06",
-    "statistics": { ... }
-  },
-  "message": "Report generated successfully"
-}
-```
-
----
-
-## 📈 Statistics (統計)
-
-### 1. プレイヤー統計取得
-```
-GET /api/v1/players/{playerId}/statistics
-```
-
-**クエリパラメータ**:
-- `period` (string): 期間 (`7d`, `30d`, `90d`, `all`)
-
-**レスポンス例**:
-```json
-{
-  "success": true,
-  "data": {
-    "period": "30d",
-    "total_battles": 150,
-    "wins": 95,
-    "losses": 50,
-    "draws": 5,
-    "win_rate": 0.633,
-    "win_streak": {
-      "current": 3,
-      "best": 8
-    },
-    "trophy_stats": {
-      "starting_trophies": 4800,
-      "current_trophies": 5000,
-      "change": 200,
-      "peak": 5100,
-      "lowest": 4750
-    },
-    "deck_stats": {
-      "total_decks_used": 5,
-      "favorite_deck": [...],
-      "best_deck": [...]
-    },
-    "card_stats": {
-      "most_used_card": "Knight",
-      "best_performing_card": "Hog Rider"
-    }
-  }
-}
-```
-
-### 2. デッキ統計取得
-```
-GET /api/v1/decks/statistics
-```
-
-**クエリパラメータ**:
-- `player_id` (integer): プレイヤーID
-- `period` (string): 期間
-
-**レスポンス例**:
-```json
-{
-  "success": true,
-  "data": [
-    {
-      "deck": [...],
-      "usage_count": 50,
-      "win_count": 35,
-      "loss_count": 15,
-      "win_rate": 0.7,
-      "average_trophy_change": 18
-    }
-  ]
 }
 ```
 
@@ -585,8 +481,11 @@ GET /api/v1/decks/statistics
 | `NOT_FOUND` | リソースが見つからない |
 | `UNAUTHORIZED` | 認証エラー |
 | `FORBIDDEN` | 権限エラー |
-| `API_ERROR` | Clash Royale APIエラー |
+| `API_ERROR` | Google AI APIエラー |
 | `RATE_LIMIT_EXCEEDED` | レート制限超過 |
+| `FILE_TOO_LARGE` | ファイルサイズ制限超過 |
+| `UNSUPPORTED_FILE_FORMAT` | サポートされていないファイル形式 |
+| `ANALYSIS_FAILED` | 動画解析失敗 |
 | `SERVER_ERROR` | サーバーエラー |
 
 ## 🔒 レート制限

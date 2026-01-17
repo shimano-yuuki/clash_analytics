@@ -271,9 +271,10 @@ REDIS_HOST=redis
 REDIS_PASSWORD=null
 REDIS_PORT=6379
 
-# Clash Royale API設定
-CLASH_ROYALE_API_TOKEN=your_api_token_here
-CLASH_ROYALE_API_BASE_URL=https://api.clashroyale.com/v1
+# Google AI API設定
+GOOGLE_CLOUD_PROJECT_ID=your_project_id
+GOOGLE_APPLICATION_CREDENTIALS=/var/www/html/storage/app/google-cloud-key.json
+GOOGLE_AI_API_KEY=your_api_key_here
 ```
 
 ### Step 5: Dockerコンテナの起動
@@ -304,8 +305,7 @@ docker-compose exec app php artisan storage:link
 # データベースマイグレーション
 docker-compose exec app php artisan migrate
 
-# シーダー実行 (カードマスターデータ)
-docker-compose exec app php artisan db:seed --class=CardSeeder
+# マイグレーション実行のみ（シーダー不要）
 ```
 
 ### Step 7: 動作確認
@@ -318,20 +318,49 @@ Laravelのウェルカムページが表示されればOK!
 
 ---
 
-## 🔑 Clash Royale API トークン取得
+## 🔑 Google AI API 設定
 
-1. https://developer.clashroyale.com/ にアクセス
-2. アカウント登録・ログイン
-3. 「Create New Key」をクリック
-4. 以下を入力:
-   - **Name**: 任意の名前
-   - **Description**: プロジェクト説明
-   - **Allowed IP addresses**: 開発環境のIPアドレス
-     - ローカル開発: `0.0.0.0/0` (すべて許可、開発のみ)
-     - 本番環境: サーバーの固定IP
-5. 生成されたトークンを `.env` の `CLASH_ROYALE_API_TOKEN` に設定
+### Google Cloud Platform セットアップ
 
-**注意**: IPアドレス制限があるため、本番環境では必ず固定IPを設定してください。
+1. **Google Cloud Platform アカウント作成**
+   - https://cloud.google.com/ にアクセス
+   - アカウント登録・ログイン
+   - 無料トライアル (300ドル分のクレジット) が利用可能
+
+2. **プロジェクト作成**
+   - Cloud Console にログイン
+   - 「プロジェクトを作成」をクリック
+   - プロジェクト名を入力 (例: `clash-royale-analytics`)
+   - プロジェクトIDをメモ
+
+3. **API 有効化**
+   - 「APIとサービス」→ 「ライブラリ」を開く
+   - 以下2つのAPIを有効化:
+     - **Video Intelligence API**
+     - **Gemini API** (Generative AI API)
+
+4. **サービスアカウント作成**
+   - 「IAMと管理」→ 「サービスアカウント」を開く
+   - 「サービスアカウントを作成」をクリック
+   - 名前と説明を入力
+   - 「役割」で `Video Intelligence API User` と `AI Platform User` を付与
+
+5. **認証情報の作成**
+   - 作成したサービスアカウントをクリック
+   - 「キー」タブ → 「キーを追加」→ 「JSONを作成」
+   - ダウンロードされたJSONファイルを `storage/app/google-cloud-key.json` に保存
+
+6. **環境変数の設定**
+   - `.env` ファイルに以下を追加:
+   ```env
+   GOOGLE_CLOUD_PROJECT_ID=your_project_id
+   GOOGLE_APPLICATION_CREDENTIALS=/var/www/html/storage/app/google-cloud-key.json
+   GOOGLE_AI_API_KEY=your_api_key_here
+   ```
+
+**注意**: 
+- JSONキーファイルは `.gitignore` に追加してください
+- 本番環境では環境変数で認証情報を設定することを推奨します
 
 ---
 

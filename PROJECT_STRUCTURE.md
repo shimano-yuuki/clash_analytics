@@ -25,64 +25,65 @@ clash-royale-analytics/
 ├── app/                           # Laravelアプリケーションコア
 │   ├── Console/
 │   │   ├── Commands/              # Artisanコマンド
-│   │   │   ├── FetchBattleLog.php        # バトルログ取得コマンド
-│   │   │   ├── GenerateDailyReport.php   # 日次レポート生成
-│   │   │   └── UpdatePlayerStats.php     # プレイヤー統計更新
+│   │   │   ├── AnalyzeVideo.php          # 動画解析コマンド
+│   │   │   ├── GenerateReport.php        # レポート生成コマンド
+│   │   │   └── CleanupOldVideos.php      # 古い動画ファイル削除
 │   │   └── Kernel.php
 │   │
 │   ├── Exceptions/
-│   │   ├── ClashRoyaleApiException.php   # API例外
+│   │   ├── VideoAnalysisException.php    # 動画解析例外
+│   │   ├── GoogleAiApiException.php      # Google AI API例外
 │   │   └── Handler.php
 │   │
 │   ├── Http/
 │   │   ├── Controllers/
 │   │   │   ├── Api/                      # APIコントローラー
-│   │   │   │   ├── PlayerController.php
-│   │   │   │   ├── BattleController.php
+│   │   │   │   ├── VideoController.php
+│   │   │   │   ├── VideoAnalysisController.php
 │   │   │   │   └── ReportController.php
 │   │   │   ├── Web/                      # Webコントローラー
 │   │   │   │   ├── DashboardController.php
-│   │   │   │   ├── PlayerController.php
+│   │   │   │   ├── VideoController.php
 │   │   │   │   ├── ReportController.php
 │   │   │   │   └── LanguageController.php
 │   │   │   └── Controller.php
 │   │   │
 │   │   ├── Middleware/
 │   │   │   ├── SetLocale.php            # 言語設定ミドルウェア
-│   │   │   └── ValidateClashRoyaleTag.php
+│   │   │   └── ValidateVideoFile.php
 │   │   │
 │   │   ├── Requests/                    # フォームリクエスト
-│   │   │   ├── StorePlayerRequest.php
+│   │   │   ├── UploadVideoRequest.php
 │   │   │   └── GenerateReportRequest.php
 │   │   │
 │   │   └── Resources/                   # APIリソース
-│   │       ├── PlayerResource.php
-│   │       ├── BattleResource.php
+│   │       ├── VideoResource.php
+│   │       ├── VideoAnalysisResource.php
 │   │       └── ReportResource.php
 │   │
 │   ├── Models/                          # Eloquentモデル
-│   │   ├── Player.php                   # プレイヤー
-│   │   ├── Battle.php                   # バトル記録
-│   │   ├── Deck.php                     # デッキ
-│   │   ├── Card.php                     # カード
-│   │   ├── Report.php                   # レポート
-│   │   └── PlayerStatistics.php         # プレイヤー統計
+│   │   ├── Video.php                    # 動画
+│   │   ├── VideoAnalysis.php            # 動画解析結果
+│   │   └── Report.php                   # レポート
 │   │
 │   ├── Repositories/                    # リポジトリパターン
-│   │   ├── PlayerRepository.php
-│   │   ├── BattleRepository.php
+│   │   ├── VideoRepository.php
+│   │   ├── VideoAnalysisRepository.php
 │   │   └── ReportRepository.php
 │   │
 │   ├── Services/                        # ビジネスロジック
-│   │   ├── ClashRoyaleApiService.php    # API通信サービス
-│   │   ├── BattleAnalysisService.php    # バトル解析サービス
+│   │   ├── GoogleAiApiService.php       # Google AI API通信サービス
+│   │   ├── VideoAnalysisService.php     # 動画解析サービス
+│   │   ├── VideoStorageService.php      # 動画ストレージサービス
 │   │   ├── ReportGenerationService.php  # レポート生成サービス
-│   │   ├── StatisticsService.php        # 統計計算サービス
+│   │   ├── ElixirAnalysisService.php    # エリクサー分析サービス
+│   │   ├── TimingAnalysisService.php    # タイミング分析サービス
+│   │   ├── RiskAnalysisService.php      # リスク分析サービス
 │   │   └── CacheService.php             # キャッシュサービス
 │   │
 │   ├── Providers/
 │   │   ├── AppServiceProvider.php
-│   │   └── ClashRoyaleServiceProvider.php
+│   │   └── VideoAnalysisServiceProvider.php
 │   │
 │   └── View/
 │       └── Components/                  # Bladeコンポーネント
@@ -159,18 +160,21 @@ clash-royale-analytics/
 │       ├── dashboard/
 │       │   └── index.blade.php          # ダッシュボード
 │       │
-│       ├── players/
-│       │   ├── index.blade.php          # プレイヤー一覧
-│       │   ├── show.blade.php           # プレイヤー詳細
-│       │   └── search.blade.php         # プレイヤー検索
+│       ├── videos/
+│       │   ├── index.blade.php          # 動画一覧
+│       │   ├── show.blade.php           # 動画詳細
+│       │   ├── upload.blade.php         # 動画アップロード
+│       │   └── player.blade.php         # 動画プレーヤー
 │       │
 │       ├── reports/
 │       │   ├── index.blade.php          # レポート一覧
 │       │   ├── show.blade.php           # レポート詳細
 │       │   └── partials/
-│       │       ├── statistics.blade.php
-│       │       ├── deck-analysis.blade.php
-│       │       └── trend-charts.blade.php
+│       │       ├── elixir-analysis.blade.php
+│       │       ├── cost-analysis.blade.php
+│       │       ├── timing-analysis.blade.php
+│       │       ├── risk-analysis.blade.php
+│       │       └── timeline.blade.php
 │       │
 │       └── errors/
 │           ├── 404.blade.php
@@ -184,6 +188,7 @@ clash-royale-analytics/
 ├── storage/
 │   ├── app/
 │   │   ├── public/
+│   │   │   └── videos/                  # アップロードされた動画ファイル
 │   │   └── reports/                     # 生成されたレポート
 │   ├── framework/
 │   ├── logs/
@@ -229,10 +234,10 @@ clash-royale-analytics/
 
 ### `/app/Services`
 ビジネスロジックを分離して配置。Controller から呼び出される。
-- 外部API通信
-- データ解析処理
+- Google AI API通信
+- 動画解析処理
+- エリクサー/コスト/タイミング/リスク分析
 - レポート生成
-- 統計計算
 
 ### `/app/Repositories`
 データアクセスロジックを抽象化。テスト可能性を向上。
@@ -271,13 +276,19 @@ Bladeテンプレート。UI表示を担当。
 ## 🔄 データフロー
 
 ```
-User Request
+User Request (動画アップロード)
     ↓
 Routes (web.php / api.php)
     ↓
 Controller
     ↓
-Service Layer ←→ External API (Clash Royale)
+Video Storage Service (動画保存)
+    ↓
+Video Analysis Service ←→ Google AI API
+    ↓
+Analysis Services (エリクサー/コスト/タイミング/リスク)
+    ↓
+Report Generation Service
     ↓
 Repository
     ↓
@@ -294,9 +305,9 @@ Response → View (Blade) / JSON (API)
 2. `.docker/` - Docker環境構築
 3. `database/migrations/` - DB設計
 4. `app/Models/` - モデル作成
-5. `app/Services/` - サービス層実装
+5. `app/Services/` - サービス層実装 (Google AI API連携)
 6. `app/Http/Controllers/` - コントローラー実装
-7. `resources/views/` - ビュー作成
+7. `resources/views/` - ビュー作成 (動画プレーヤー含む)
 8. `resources/lang/` - 多言語ファイル作成
 9. `tests/` - テスト作成
 

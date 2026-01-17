@@ -192,9 +192,10 @@ EOF
    DB_USERNAME=${MYSQLUSER}
    DB_PASSWORD=${MYSQLPASSWORD}
    
-   # Clash Royale API
-   CLASH_ROYALE_API_TOKEN=your_production_token
-   CLASH_ROYALE_API_BASE_URL=https://api.clashroyale.com/v1
+   # Google AI API
+   GOOGLE_CLOUD_PROJECT_ID=your_project_id
+   GOOGLE_APPLICATION_CREDENTIALS=/var/www/html/storage/app/google-cloud-key.json
+   GOOGLE_AI_API_KEY=your_production_api_key
    
    # キャッシュ (fileドライバーを使用)
    CACHE_DRIVER=file
@@ -238,7 +239,9 @@ services:
         fromDatabase:
           name: clash-royale-db
           property: connectionString
-      - key: CLASH_ROYALE_API_TOKEN
+      - key: GOOGLE_CLOUD_PROJECT_ID
+        value: your_project_id
+      - key: GOOGLE_AI_API_KEY
         sync: false  # 手動設定
 
 databases:
@@ -325,7 +328,8 @@ php artisan key:generate --show
 
 # Secrets登録
 fly secrets set APP_KEY=base64:xxxxx
-fly secrets set CLASH_ROYALE_API_TOKEN=your_token
+fly secrets set GOOGLE_CLOUD_PROJECT_ID=your_project_id
+fly secrets set GOOGLE_AI_API_KEY=your_api_key
 fly secrets set DB_PASSWORD=your_db_password
 ```
 
@@ -470,7 +474,10 @@ php artisan sentry:publish --dsn=https://your-dsn@sentry.io/project-id
 - [ ] `.env` の `APP_DEBUG=false` に設定
 - [ ] `APP_KEY` が本番用に生成されている
 - [ ] データベース接続情報が正しい
-- [ ] Clash Royale APIトークンが本番用に設定されている
+- [ ] Google AI APIキーが本番用に設定されている
+- [ ] Google Cloud Project IDが正しく設定されている
+- [ ] 認証情報ファイルが適切に配置されている
+- [ ] 動画ファイル保存用のストレージ容量が十分
 - [ ] キャッシュドライバーが適切に設定されている
 - [ ] ストレージディレクトリの権限が正しい
 - [ ] マイグレーションが最新状態
@@ -497,10 +504,12 @@ fly ssh console
 php artisan migrate --force
 ```
 
-### 2. シーダー実行
+### 2. ストレージ設定
 
 ```bash
-php artisan db:seed --class=CardSeeder
+# 動画ファイル保存用ディレクトリの作成
+php artisan storage:link
+# またはS3等の外部ストレージを使用する場合は設定を確認
 ```
 
 ### 3. キャッシュ最適化

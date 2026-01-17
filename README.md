@@ -1,14 +1,14 @@
 # Clash Royale Analytics Platform
 
-クラッシュ・ロワイヤルのプレイヤーデータを解析し、詳細なレポートを提供するWebアプリケーション
+クラッシュ・ロワイヤルのプレイ動画をアップロードし、Google AIで解析して詳細なレポートを提供するWebアプリケーション
 
 ## 🎯 プロジェクト概要
 
-このプラットフォームは、Clash Royale APIを活用して以下の機能を提供します:
+このプラットフォームは、Google AI技術を活用して以下の機能を提供します:
 
-1. **ユーザー設定機能** - プレイヤータグでユーザーを検索・登録
-2. **試合データ解析** - バトルログから詳細な統計とパターンを分析
-3. **レポート生成** - 分析結果をデータベースに保存し、可視化
+1. **動画アップロード機能** - Clash Royaleのプレイ動画をアップロード
+2. **AI動画解析** - Google AIで動画を解析し、エリクサー、コスト、タイミング、リスクを分析
+3. **レポート生成** - 解析結果をデータベースに保存し、可視化
 
 ## 🌍 多言語対応
 
@@ -22,27 +22,30 @@
 - **フロントエンド**: Blade Templates / Vue.js (検討中)
 - **データベース**: MySQL 8.0
 - **コンテナ**: Docker / Docker Compose
-- **外部API**: Clash Royale API
+- **外部API**: Google Video Intelligence API / Google Gemini API
+- **ストレージ**: 動画ファイル保存用 (ローカル / S3等)
 
 ## 📋 必要なドキュメント
 
 プロジェクトを進める前に、以下のドキュメントを確認してください:
 
-1. [PROJECT_OVERVIEW.md](./docs/PROJECT_OVERVIEW.md) - 詳細な機能要件
-2. [PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md) - ディレクトリ構成
-3. [CODING_STANDARDS.md](./docs/CODING_STANDARDS.md) - コーディング規約
-4. [API_DESIGN.md](./docs/API_DESIGN.md) - API設計
-5. [DATABASE_SCHEMA.md](./docs/DATABASE_SCHEMA.md) - データベース設計
-6. [SETUP_GUIDE.md](./docs/SETUP_GUIDE.md) - 環境構築手順
-7. [DEPLOYMENT_GUIDE.md](./docs/DEPLOYMENT_GUIDE.md) - デプロイ手順
-8. [LOCALIZATION_GUIDE.md](./docs/LOCALIZATION_GUIDE.md) - 多言語化ガイド
+1. [PROJECT_OVERVIEW.md](./PROJECT_OVERVIEW.md) - 詳細な機能要件
+2. [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) - ディレクトリ構成
+3. [CODING_STANDARDS.md](./CODING_STANDARDS.md) - コーディング規約
+4. [API_DESIGN.md](./API_DESIGN.md) - API設計
+5. [DATABASE_SCHEMA.md](./DATABASE_SCHEMA.md) - データベース設計
+6. [DIAGRAMS.md](./DIAGRAMS.md) - システム図・フロー図（シーケンス図、マーメイド図）
+7. [SETUP_GUIDE.md](./SETUP_GUIDE.md) - 環境構築手順
+8. [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) - デプロイ手順
+9. [LOCALIZATION_GUIDE.md](./LOCALIZATION_GUIDE.md) - 多言語化ガイド
 
 ## 🚀 クイックスタート
 
 ### 前提条件
 
 - Docker Desktop がインストール済み
-- Clash Royale API トークンを取得済み ([https://developer.clashroyale.com](https://developer.clashroyale.com))
+- Google Cloud Platform アカウントとAPIキーを取得済み
+- Google Video Intelligence API / Gemini API が有効化済み
 - Git がインストール済み
 
 ### 初回セットアップ
@@ -55,8 +58,9 @@ cd clash-royale-analytics
 # 環境変数ファイルのコピー
 cp .env.example .env
 
-# .envファイルを編集してClash Royale APIトークンを設定
-# CLASH_ROYALE_API_TOKEN=your_token_here
+# .envファイルを編集してGoogle AI APIキーを設定
+# GOOGLE_CLOUD_PROJECT_ID=your_project_id
+# GOOGLE_AI_API_KEY=your_api_key_here
 
 # Dockerコンテナの起動
 docker-compose up -d
