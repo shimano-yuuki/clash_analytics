@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\VideoController;
 use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\PlayerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,5 +36,12 @@ Route::middleware('api')->group(function () {
     Route::prefix('reports')->group(function () {
         Route::get('/', [ReportController::class, 'index']);
         Route::get('/{videoId}', [ReportController::class, 'show']);
+    });
+
+    // Clash Royale Player API
+    Route::prefix('players')->group(function () {
+        Route::get('/', [PlayerController::class, 'getPlayer']); // ?tag=#ABC123
+        Route::get('/battles', [PlayerController::class, 'getBattles']); // ?tag=#ABC123
+        Route::get('/battle/analysis', [PlayerController::class, 'getBattleForAnalysis']); // ?tag=#ABC123&battle_index=0
     });
 });

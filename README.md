@@ -47,6 +47,7 @@
 - **動画解析**: Google Video Intelligence API
 - **AI解析**: Google Gemini API
 - **認証**: Google Cloud Platform (Service Account)
+- **バトルデータ**: Clash Royale Official API
 
 ### 開発ツール
 - **Node.js**: 18.20.8 (Docker内)

@@ -66,3 +66,47 @@ export interface DashboardStats {
   processing_videos: number;
   recent_videos: Video[];
 }
+
+// Clash Royale API関連の型定義
+export interface Player {
+  tag: string;
+  name: string;
+  expLevel: number;
+  trophies: number;
+  bestTrophies: number;
+  wins: number;
+  losses: number;
+  battleCount: number;
+}
+
+export interface Battle {
+  index: number;
+  battle_time: string;
+  game_mode: string;
+  type: string;
+  result: 'win' | 'loss' | 'draw' | 'unknown';
+  player_deck: Card[];
+  player_deck_cost: number;
+  opponent_deck: Card[];
+  opponent_deck_cost: number;
+  raw_data: any;
+}
+
+export interface Card {
+  id: number;
+  name: string;
+  level: number;
+  elixir_cost: number;
+}
+
+export interface BattleForAnalysis {
+  battle_time: string;
+  game_mode: string;
+  type: string;
+  result: 'win' | 'loss' | 'draw' | 'unknown';
+  player_deck: Card[];
+  player_deck_cost: number;
+  opponent_deck: Card[];
+  opponent_deck_cost: number;
+  battle_raw_data: any;
+}
