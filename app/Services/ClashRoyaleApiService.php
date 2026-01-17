@@ -40,7 +40,20 @@ class ClashRoyaleApiService
                 return $response->json();
             }
 
-            throw new Exception('Failed to fetch player data: ' . $response->body());
+            // 詳細なエラー情報を取得
+            $statusCode = $response->status();
+            $errorBody = $response->body();
+            $errorJson = $response->json();
+            
+            $errorMessage = 'Failed to fetch player data';
+            if (isset($errorJson['message'])) {
+                $errorMessage = $errorJson['message'];
+            } elseif (!empty($errorBody)) {
+                $errorMessage = $errorBody;
+            }
+
+            Log::error("Clash Royale API Error (getPlayer): Status {$statusCode} - {$errorMessage}");
+            throw new Exception("Clash Royale API Error [{$statusCode}]: {$errorMessage}");
         } catch (Exception $e) {
             Log::error('Clash Royale API Error (getPlayer): ' . $e->getMessage());
             throw $e;

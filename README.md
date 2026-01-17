@@ -4,11 +4,12 @@
 
 ## 🎯 プロジェクト概要
 
-このプラットフォームは、Google AI技術を活用して以下の機能を提供します:
+このプラットフォームは、Google AI技術とClash Royale APIを活用して以下の機能を提供します:
 
 1. **動画アップロード機能** - Clash Royaleのプレイ動画をアップロード
-2. **AI動画解析** - Google AIで動画を解析し、エリクサー、コスト、タイミング、リスクを分析
-3. **レポート生成** - 解析結果をデータベースに保存し、可視化
+2. **プレイヤー検索機能** - Clash Royale APIからプレイヤー情報とバトルログを取得
+3. **AI動画解析** - Google AIで動画を解析し、エリクサー、コスト、タイミング、リスクを分析
+4. **レポート生成** - 解析結果をデータベースに保存し、可視化
 
 ## 🌍 多言語対応
 
@@ -80,6 +81,7 @@
 - Docker Desktop がインストール済み
 - Google Cloud Platform アカウントとAPIキーを取得済み
 - Google Video Intelligence API / Gemini API が有効化済み
+- Clash Royale API キーを取得済み（https://developer.clashroyale.com/）
 - Git がインストール済み
 
 ### 初回セットアップ
@@ -94,9 +96,10 @@ cd clash-royale-analytics
 # 環境変数ファイルのコピー
 cp .env.example .env
 
-# .envファイルを編集してGoogle AI APIキーを設定
+# .envファイルを編集してAPIキーを設定
 # GOOGLE_CLOUD_PROJECT_ID=your_project_id
 # GOOGLE_AI_API_KEY=your_api_key_here
+# CLASH_ROYALE_API_KEY=your_clash_royale_api_key_here
 
 # Dockerコンテナの起動
 docker-compose up -d --build
@@ -127,6 +130,26 @@ docker-compose exec app php artisan migrate
 3. **DB設計の確認** - [DATABASE_SCHEMA.md](./docs/DATABASE_SCHEMA.md)を参照
 4. **機能実装** - 各ドキュメントを参照しながら実装
 
+## 🔑 APIキーの取得方法
+
+### Clash Royale API キー
+
+1. https://developer.clashroyale.com/ にアクセス
+2. Supercellアカウントでログイン
+3. 「New Key」をクリックしてAPIキーを作成
+4. キーをコピーして`.env`に設定:
+   ```
+   CLASH_ROYALE_API_KEY=your_api_key_here
+   ```
+
+### Google AI API キー
+
+1. Google Cloud Platform にアクセス
+2. プロジェクトを作成
+3. Video Intelligence API と Gemini API を有効化
+4. サービスアカウントを作成してJSONキーをダウンロード
+5. `.env`に設定（詳細は [SETUP_GUIDE.md](./docs/SETUP_GUIDE.md) を参照）
+
 ## 🎓 目標
 
 このプロジェクトを通じて以下を習得:
@@ -136,6 +159,7 @@ docker-compose exec app php artisan migrate
 - Docker環境での開発フロー
 - データベース設計とマイグレーション
 - 多言語化(i18n)の実装
+- Next.jsとReactの実装
 
 ## 📝 ライセンス
 
