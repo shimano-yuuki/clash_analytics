@@ -1,27 +1,39 @@
 # Clash Royale Analytics Platform
 
-クラッシュ・ロワイヤルのプレイ動画をアップロードし、Google AIで解析して詳細なレポートを提供するWebアプリケーション
+Clash Royaleのプレイ動画をアップロードし、Google AIで解析して詳細なレポートを提供するWebアプリケーション
 
 ## 🎯 プロジェクト概要
 
-このプラットフォームは、Google AI技術とClash Royale APIを活用して以下の機能を提供します:
+このプラットフォームは、Google AI技術を活用してClash Royaleのプレイ動画を解析し、エリクサー管理、デッキコスト、攻撃タイミング、リスク分析などの詳細なレポートを生成します。
 
-1. **動画アップロード機能** - Clash Royaleのプレイ動画をアップロード
-2. **プレイヤー検索機能** - Clash Royale APIからプレイヤー情報とバトルログを取得
-3. **AI動画解析** - Google AIで動画を解析し、エリクサー、コスト、タイミング、リスクを分析
-4. **レポート生成** - 解析結果をデータベースに保存し、可視化
+### 主な機能
 
-## 🌍 多言語対応
+1. **動画アップロード** - Clash Royaleのプレイ動画をアップロード
+2. **AI動画解析** - Google AIで動画を自動解析
+3. **解析結果の確認** - アップロードした動画と解析結果を確認
 
-- 日本語
-- 英語
-- その他主要言語(拡張予定)
+### 画面構成
+
+このアプリケーションは、シンプルな3画面構成で設計されています：
+
+1. **トップ画面** (`/`)
+   - アップロード済みの動画一覧を表示
+   - 動画アップロードへの導線
+
+2. **動画アップロード画面** (`/upload`)
+   - 動画ファイルのアップロード
+   - アップロード後、自動的にGoogle AI解析が開始
+
+3. **動画詳細・解析結果確認画面** (`/videos/[id]`)
+   - アップロードした動画の再生
+   - 解析結果の詳細表示
+   - エリクサー分析、コスト分析、タイミング分析、リスク分析
 
 ## 🛠 技術スタック
 
 ### バックエンド
 - **PHP**: 8.2.30
-- **Laravel**: 12.47.0
+- **Laravel**: 12.47.0 (REST API)
 - **Webサーバー**: Nginx (Alpine)
 - **PHP-FPM**: 8.2-fpm
 - **Composer**: PHP依存関係管理
@@ -68,10 +80,9 @@
 3. [CODING_STANDARDS.md](./docs/CODING_STANDARDS.md) - コーディング規約
 4. [API_DESIGN.md](./docs/API_DESIGN.md) - API設計
 5. [DATABASE_SCHEMA.md](./docs/DATABASE_SCHEMA.md) - データベース設計
-6. [DIAGRAMS.md](./docs/DIAGRAMS.md) - システム図・フロー図（シーケンス図、マーメイド図）
+6. [DIAGRAMS.md](./docs/DIAGRAMS.md) - システム図・フロー図
 7. [SETUP_GUIDE.md](./docs/SETUP_GUIDE.md) - 環境構築手順
 8. [DEPLOYMENT_GUIDE.md](./docs/DEPLOYMENT_GUIDE.md) - デプロイ手順
-9. [LOCALIZATION_GUIDE.md](./docs/LOCALIZATION_GUIDE.md) - 多言語化ガイド
 
 ## 🚀 クイックスタート
 
@@ -83,8 +94,6 @@
 - Git がインストール済み
 
 ### 初回セットアップ
-
-詳細な手順は [SETUP_INSTRUCTIONS.md](./SETUP_INSTRUCTIONS.md) を参照してください。
 
 ```bash
 # リポジトリのクローン
@@ -137,16 +146,29 @@ docker-compose exec app php artisan migrate
 4. サービスアカウントを作成してJSONキーをダウンロード
 5. `.env`に設定（詳細は [SETUP_GUIDE.md](./docs/SETUP_GUIDE.md) を参照）
 
+## 🔄 アプリケーションの動作フロー
+
+1. **動画アップロード**
+   - ユーザーがトップ画面またはアップロード画面から動画をアップロード
+   - 動画ファイルはサーバーに保存
+
+2. **自動解析開始**
+   - アップロード完了後、自動的にGoogle AI解析が開始
+   - バックグラウンドで解析処理が実行
+
+3. **解析結果の確認**
+   - 動画詳細画面で動画を再生
+   - 解析結果（エリクサー、コスト、タイミング、リスク）を確認
+
 ## 🎓 目標
 
 このプロジェクトを通じて以下を習得:
 
-- Laravelの基本構造(MVC、ルーティング、Eloquent)
-- 外部API連携の実装方法
+- Laravel REST APIの実装
+- Next.js + React + TypeScriptでのフロントエンド開発
+- Google AI APIとの連携
 - Docker環境での開発フロー
 - データベース設計とマイグレーション
-- 多言語化(i18n)の実装
-- Next.jsとReactの実装
 
 ## 📝 ライセンス
 
@@ -159,3 +181,4 @@ MIT License
 ---
 
 **作成日**: 2026-01-06
+**最終更新**: 2026-01-17

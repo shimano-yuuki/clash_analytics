@@ -26,22 +26,16 @@ export default function RootLayout({
               </Link>
               <div className="space-x-4">
                 <Link
-                  href="/dashboard"
+                  href="/"
                   className="text-gray-700 hover:text-purple-600 transition"
                 >
-                  ダッシュボード
+                  ホーム
                 </Link>
                 <Link
-                  href="/videos"
-                  className="text-gray-700 hover:text-purple-600 transition"
-                >
-                  動画一覧
-                </Link>
-                <Link
-                  href="/videos/upload"
+                  href="/upload"
                   className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition"
                 >
-                  アップロード
+                  📹 動画をアップロード
                 </Link>
               </div>
             </div>

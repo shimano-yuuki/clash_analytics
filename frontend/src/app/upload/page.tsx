@@ -38,7 +38,8 @@ export default function VideoUploadPage() {
       }
 
       const response = await videoApi.upload(formData);
-      router.push(`/videos/${response.data.id}`);
+      // 動画詳細画面に遷移（解析結果確認画面）
+      router.push(`/videos/${response.data.data?.id || response.data.id}`);
     } catch (err: any) {
       setError(
         err.response?.data?.message || 'アップロードに失敗しました'

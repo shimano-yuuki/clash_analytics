@@ -49,11 +49,3 @@ export const videoApi = {
     delete: (id: string | number) => apiClient.delete(`/videos/${id}`),
 };
 
-export const reportApi = {
-    getAll: () => apiClient.get('/reports'),
-    getById: (id: string | number) => apiClient.get(`/reports/${id}`),
-};
-
-export const dashboardApi = {
-    getStats: () => apiClient.get('/dashboard/stats'),
-};
